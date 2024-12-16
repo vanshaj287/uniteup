@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Tracker</title>
+    <style>
+        .pot-container {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            border: 2px solid #000;
+            border-radius: 10px;
+            overflow: hidden;
+            background: linear-gradient(to top, #fff, #ddd);
+        }
+        .water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #4caf50;
+            transition: height 0.5s ease-in-out;
+        }
+        .label {
+            margin-top: 20px;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="pot-container">
+        <div class="water" id="water" style="height: 0%;"></div>
+    </div>
+    <div class="label" id="donation-label">Collected: ₹0</div>
+
+    <script>
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSAcz8DEw-HyiqnMbVm924rzZJ0dRluS_GFxFixsESXX7DVZ9xyuR3787tNRQti0_vSp8GGbD--N5sL/pubhtmlhttps://docs.google.com/spreadsheets/d/e/2PACX-1vSAcz8DEw-HyiqnMbVm924rzZJ0dRluS_GFxFixsESXX7DVZ9xyuR3787tNRQti0_vSp8GGbD--N5sL/pubhtml?gid=0&single=trueL"; // Add your published sheet API URL here.
+        const goal = 100000; // Set your donation goal.
+
+        async function fetchDonationData() {
+            try {
+                const response = await fetch(sheetUrl);
+                const data = await response.json();
+                const totalDonation = data.values[1][1]; // Adjust based on your Sheet's structure.
+                updateDonation(totalDonation);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        function updateDonation(totalDonation) {
+            const water = document.getElementById("water");
+            const label = document.getElementById("donation-label");
+            const percentage = Math.min((totalDonation / goal) * 100, 100);
+            water.style.height = `${percentage}%`;
+            label.textContent = `Collected: ₹${totalDonation}`;
+        }
+
+        fetchDonationData();
+    </script>
+</body>
+</html>
